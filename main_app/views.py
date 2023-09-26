@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from .models import Artist
 from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
+from django.views.generic import DetailView
 
 # Create your views here.
 class Home(TemplateView):
@@ -71,6 +72,10 @@ class ArtistList(TemplateView):
         else: 
             context["artists"] = Artist.objects.all() 
         return context
+    
+class ArtistDetail(DetailView):
+    model = Artist
+    template_name = "artist_detail.html"
 
 
 # COME FARE SENTA template_name
