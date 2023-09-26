@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
 from .models import Artist
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView
 
@@ -83,6 +83,10 @@ class ArtistUpdate(UpdateView):
     template_name = "artist_update.html"
     success_url = '/artists/'
 
+class ArtistDelete(DeleteView):
+    model = Artist
+    template_name = 'artist_delete_confermation.html'
+    success_url = '/artists/'
 
 # COME FARE SENTA template_name
 # class About(View):
