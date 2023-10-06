@@ -83,6 +83,11 @@ class ArtistDetail(DetailView):
     model = Artist
     template_name = "artist_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["playlists"] = Playlist.objects.all()
+        return context
+
 class ArtistUpdate(UpdateView):
     model = Artist
     fields = ['name', 'img', 'bio', 'verified_artist']
@@ -101,6 +106,15 @@ class SongCreate(View):
         artist = Artist.objects.get(pk=pk)
         Song.objects.create(title=title, length=length, artist=artist)
         return redirect('artist_detail', pk=pk)
+    
+class PlaylistSongAssoc(View):
+    def get(self, request, pk, song_pk):
+        assoc = request.GET.get("assoc")
+        if assoc == "remove":
+            Playlist.objects.get(pk=pk).songs.remove(song_pk)
+        if assoc == "add":
+            Playlist.objects.get(pk=pk).songs.add(song_pk)
+        return redirect('home')
 
 # COME FARE SENTA template_name
 # class About(View):
