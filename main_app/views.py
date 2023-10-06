@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views import View
 from django.http import HttpResponse
-from .models import Artist, Song
+from .models import Artist, Song, Playlist
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView
@@ -11,6 +11,11 @@ from django.views.generic import DetailView
 # Create your views here.
 class Home(TemplateView):
     template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["playlists"] = Playlist.objects.all()
+        return context
 
 class About(TemplateView):
     template_name = "about.html"
