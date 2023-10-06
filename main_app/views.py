@@ -1,8 +1,9 @@
 from typing import Any
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import View
 from django.http import HttpResponse
-from .models import Artist
+from .models import Artist, Song
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView
@@ -19,7 +20,7 @@ class SongList(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["songs"] = songs
+        context["songs"] = Song.objects.all()
         return context
 
 # class Artist:
@@ -28,15 +29,15 @@ class SongList(TemplateView):
 #         self.image = image
 #         self.bio = bio
 
-class Song:
-    def __init__(self, title, album):
-        self.title = title
-        self.album = album
+# class Song:
+#     def __init__(self, title, album):
+#         self.title = title
+#         self.album = album
  
-songs = [
-    Song("Lost", "Gli anni"),
-    Song("Never Ending Song", "Lyrics")
-]
+# songs = [
+#     Song("Lost", "Gli anni"),
+#     Song("Never Ending Song", "Lyrics")
+# ]
 
 class ArtistCreate(CreateView):
     model = Artist
@@ -87,6 +88,14 @@ class ArtistDelete(DeleteView):
     model = Artist
     template_name = 'artist_delete_confermation.html'
     success_url = '/artists/'
+
+class SongCreate(View):
+    def post(self, request, pk):
+        title = request.POST.get("title")
+        length = request.POST.get("length")
+        artist = Artist.objects.get(pk=pk)
+        Song.objects.create(title=title, length=length, artist=artist)
+        return redirect('artist_detail', pk=pk)
 
 # COME FARE SENTA template_name
 # class About(View):
